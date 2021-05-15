@@ -1,0 +1,21 @@
+server:
+  name: go-cql-rest-api
+  port: 8080
+
+cassandra:
+  public_ip: localhost
+  user_name: cassandra
+  password:  cassandra
+
+log:
+  level: info
+  map:
+    time: "@timestamp"
+    msg: message
+
+middleware:
+  log: true
+  skips: /health
+  request: request
+  response: response
+  size: size
