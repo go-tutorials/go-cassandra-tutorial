@@ -27,11 +27,11 @@ const (
 )
 
 type ApplicationContext struct {
-	HealthHandler *health.HealthHandler
+	HealthHandler *health.Handler
 	UserHandler   *handlers.UserHandler
 }
 
-func NewApp(context context.Context, root Root) (*ApplicationContext, error) {
+func NewApp(context context.Context, root Config) (*ApplicationContext, error) {
 	// connect to the cluster
 	cluster := gocql.NewCluster(root.Cql.PublicIp)
 	cluster.Consistency = gocql.Quorum
@@ -70,7 +70,7 @@ func NewApp(context context.Context, root Root) (*ApplicationContext, error) {
 	userHandler := handlers.NewUserHandler(userService)
 
 	cqlChecker := cql.NewHealthChecker(cluster)
-	healthHandler := health.NewHealthHandler(cqlChecker)
+	healthHandler := health.NewHandler(cqlChecker)
 
 	return &ApplicationContext{
 		HealthHandler: healthHandler,

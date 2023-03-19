@@ -6,7 +6,7 @@ import (
 	"github.com/core-go/config"
 	"github.com/core-go/log"
 	mid "github.com/core-go/log/middleware"
-	sv "github.com/core-go/service"
+	sv "github.com/core-go/core"
 	"github.com/gorilla/mux"
 	"net/http"
 
@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	var conf app.Root
+	var conf app.Config
 	er1 := config.Load(&conf, "configs/config")
 	if er1 != nil {
 		panic(er1)
@@ -24,7 +24,7 @@ func main() {
 
 	log.Initialize(conf.Log)
 	r.Use(mid.BuildContext)
-	logger := mid.NewStructuredLogger()
+	logger := mid.NewLogger()
 	if log.IsInfoEnable() {
 		r.Use(mid.Logger(conf.MiddleWare, log.InfoFields, logger))
 	}

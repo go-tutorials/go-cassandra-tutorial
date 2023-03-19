@@ -13,7 +13,7 @@ const (
 	DELETE = "DELETE"
 )
 
-func Route(r *mux.Router, ctx context.Context, root Root) error {
+func Route(r *mux.Router, ctx context.Context, root Config) error {
 	app, err := NewApp(ctx, root)
 	if err != nil {
 		return err
@@ -22,11 +22,10 @@ func Route(r *mux.Router, ctx context.Context, root Root) error {
 	r.HandleFunc("/health", app.HealthHandler.Check).Methods(GET)
 
 	userPath := "/users"
-	r.HandleFunc(userPath, app.UserHandler.GetAll).Methods(GET)
+	r.HandleFunc(userPath, app.UserHandler.All).Methods(GET)
 	r.HandleFunc(userPath+"/{id}", app.UserHandler.Load).Methods(GET)
 	r.HandleFunc(userPath, app.UserHandler.Insert).Methods(POST)
 	r.HandleFunc(userPath+"/{id}", app.UserHandler.Update).Methods(PUT)
-	r.HandleFunc(userPath+"/{id}", app.UserHandler.Patch).Methods(PATCH)
 	r.HandleFunc(userPath+"/{id}", app.UserHandler.Delete).Methods(DELETE)
 
 	return nil

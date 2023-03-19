@@ -4,10 +4,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/gocql/gocql"
-	"go-service/cql"
-	. "go-service/internal/models"
-	"reflect"
 	"strings"
+
+	. "go-service/internal/models"
 )
 
 type CqlUserService struct {
@@ -19,7 +18,7 @@ func NewUserService(db *gocql.ClusterConfig) *CqlUserService {
 }
 
 
-func (m *CqlUserService) GetAll(ctx context.Context) (*[]User, error) {
+func (m *CqlUserService) All(ctx context.Context) (*[]User, error) {
 	session, err := m.Cluster.CreateSession()
 	if err != nil{
 		return nil, err
@@ -77,11 +76,6 @@ func (m *CqlUserService) Update(ctx context.Context, user *User) (int64, error) 
 		return -1, err
 	}
 	return 1, nil
-}
-
-func (m *CqlUserService) Patch(ctx context.Context, user map[string]interface{}) (int64, error) {
-	userType := reflect.TypeOf(User{})
-	return cql.Patch(m.Cluster, "users", user, userType)
 }
 
 func (m *CqlUserService) Delete(ctx context.Context, id string) (int64, error) {
