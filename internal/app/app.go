@@ -4,10 +4,11 @@ import (
 	"context"
 	"github.com/core-go/health"
 	"github.com/gocql/gocql"
-	"go-service/cql"
-	"go-service/internal/handlers"
-	"go-service/internal/services"
 	"time"
+
+	"go-service/internal/handler"
+	"go-service/internal/service"
+	"go-service/pkg/cql"
 )
 
 const (
@@ -27,18 +28,18 @@ const (
 )
 
 type ApplicationContext struct {
-	HealthHandler *health.Handler
-	UserHandler   *handlers.UserHandler
+	Health *health.Handler
+	User   *handler.UserHandler
 }
 
-func NewApp(context context.Context, root Config) (*ApplicationContext, error) {
+func NewApp(ctx context.Context, config Config) (*ApplicationContext, error) {
 	// connect to the cluster
-	cluster := gocql.NewCluster(root.Cql.PublicIp)
+	cluster := gocql.NewCluster(config.Cql.PublicIp)
 	cluster.Consistency = gocql.Quorum
 	cluster.ProtoVersion = 4
 	cluster.Timeout = time.Second * 1000
 	cluster.ConnectTimeout = time.Second * 1000
-	cluster.Authenticator = gocql.PasswordAuthenticator{Username: root.Cql.UserName, Password: root.Cql.Password}
+	cluster.Authenticator = gocql.PasswordAuthenticator{Username: config.Cql.UserName, Password: config.Cql.Password}
 	session, err := cluster.CreateSession()
 	if err != nil {
 		return nil, err
@@ -66,14 +67,14 @@ func NewApp(context context.Context, root Config) (*ApplicationContext, error) {
 		return nil, err
 	}
 
-	userService := services.NewUserService(cluster)
-	userHandler := handlers.NewUserHandler(userService)
+	userService := service.NewUserService(cluster)
+	userHandler := handler.NewUserHandler(userService)
 
 	cqlChecker := cql.NewHealthChecker(cluster)
 	healthHandler := health.NewHandler(cqlChecker)
 
 	return &ApplicationContext{
-		HealthHandler: healthHandler,
-		UserHandler:   userHandler,
+		Health: healthHandler,
+		User:   userHandler,
 	}, nil
 }

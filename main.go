@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/core-go/config"
+	"github.com/core-go/core"
 	"github.com/core-go/log"
 	mid "github.com/core-go/log/middleware"
-	sv "github.com/core-go/core"
 	"github.com/gorilla/mux"
 	"net/http"
 
@@ -15,9 +15,9 @@ import (
 
 func main() {
 	var conf app.Config
-	er1 := config.Load(&conf, "configs/config")
-	if er1 != nil {
-		panic(er1)
+	err := config.Load(&conf, "configs/config")
+	if err != nil {
+		panic(err)
 	}
 
 	r := mux.NewRouter()
@@ -30,12 +30,12 @@ func main() {
 	}
 	r.Use(mid.Recover(log.PanicMsg))
 
-	er2 := app.Route(r, context.Background(), conf)
-	if er2 != nil {
-		panic(er2)
+	err = app.Route(r, context.Background(), conf)
+	if err != nil {
+		panic(err)
 	}
-	fmt.Println(sv.ServerInfo(conf.Server))
-	if er3 := http.ListenAndServe(sv.Addr(conf.Server.Port), r); er3 != nil {
-		fmt.Println(er3.Error())
+	fmt.Println(core.ServerInfo(conf.Server))
+	if err = http.ListenAndServe(core.Addr(conf.Server.Port), r); err != nil {
+		fmt.Println(err.Error())
 	}
 }

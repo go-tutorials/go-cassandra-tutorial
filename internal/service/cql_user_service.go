@@ -1,4 +1,4 @@
-package services
+package service
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"github.com/gocql/gocql"
 	"strings"
 
-	. "go-service/internal/models"
+	. "go-service/internal/model"
 )
 
 type CqlUserService struct {

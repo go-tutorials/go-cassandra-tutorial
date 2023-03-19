@@ -1,9 +1,9 @@
-package services
+package service
 
 import (
 	"context"
 
-	. "go-service/internal/models"
+	. "go-service/internal/model"
 )
 
 type UserService interface {
