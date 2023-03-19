@@ -1,10 +1,10 @@
-# go-sql-rest-api
+# go-sql-tutorial
 
 ## How to run
 #### Clone the repository
 ```shell
-git clone https://github.com/go-tutorials/go-cassandra-rest-api.git
-cd go-cassandra-rest-api
+git clone https://github.com/go-tutorials/go-cassandra-tutorial.git
+cd go-cassandra-tutorial
 ```
 
 #### To run the application
